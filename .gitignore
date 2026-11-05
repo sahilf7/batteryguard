@@ -1,0 +1,32 @@
+# CMake build output
+build/
+cmake-build-*/
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Compiled files
+*.o
+*.a
+*.so
+*.elf
+*.bin
+*.hex
+
+# Debug output
+*.map
+*.lst
+
+# Editor files
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db

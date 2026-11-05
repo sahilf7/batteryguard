@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "author": "BatteryGuard",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 20, "left": 250, "attrs": {} },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "potVoltage",
+      "top": -68.5,
+      "left": 115,
+      "attrs": { "value": "711" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "potCurrent",
+      "top": -68.5,
+      "left": -0.2,
+      "attrs": { "value": "170" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "potTemperature",
+      "top": -58.9,
+      "left": -125,
+      "attrs": { "value": "320" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnFault",
+      "top": 256.4,
+      "left": -96.4,
+      "attrs": { "color": "red", "label": "SENSOR FAULT", "bounce": "0" }
+    }
+  ],
+  "connections": [
+    [ "esp:3V3", "potVoltage:VCC", "red", [] ],
+    [ "esp:GND.1", "potVoltage:GND", "black", [] ],
+    [ "potVoltage:SIG", "esp:34", "green", [ "v86.4", "h100.61" ] ],
+    [ "esp:3V3", "potCurrent:VCC", "red", [] ],
+    [ "esp:GND.1", "potCurrent:GND", "black", [] ],
+    [ "potCurrent:SIG", "esp:35", "green", [ "v96", "h215.81" ] ],
+    [ "esp:3V3", "potTemperature:VCC", "red", [] ],
+    [ "esp:GND.1", "potTemperature:GND", "black", [] ],
+    [ "potTemperature:SIG", "esp:32", "green", [ "v96", "h258.8", "v0.8" ] ],
+    [ "btnFault:1.l", "esp:25", "green", [ "v-39", "h288.4", "v-104.8" ] ],
+    [ "btnFault:2.r", "esp:GND.1", "black", [] ],
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ]
+  ],
+  "serialMonitor": { "display": "always" },
+  "dependencies": {}
+}
