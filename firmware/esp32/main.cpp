@@ -12,6 +12,12 @@ static const uint8_t CURRENT_PIN = 35U;
 static const uint8_t TEMPERATURE_PIN = 32U;
 static const uint8_t SENSOR_FAULT_PIN = 25U;
 
+/* Status LED GPIO allocation */
+static const uint8_t LED_NORMAL_PIN = 26U;
+static const uint8_t LED_WARNING_PIN = 27U;
+static const uint8_t LED_CRITICAL_PIN = 14U;
+static const uint8_t LED_SENSOR_FAULT_PIN = 13U;
+
 /* ADC configuration */
 static const int ADC_MAX_VALUE = 4095;
 
@@ -154,6 +160,51 @@ static const char *fault_name(BatteryFault fault)
 }
 
 /* ---------------------------------------------------------
+ * Status LED indication
+ * Reflect the current protection state.
+ * --------------------------------------------------------- */
+
+static void update_status_leds(const BatteryStatus *status)
+{
+    /* Turn all LEDs OFF before selecting the active indicator. */
+    digitalWrite(LED_NORMAL_PIN, LOW);
+    digitalWrite(LED_WARNING_PIN, LOW);
+    digitalWrite(LED_CRITICAL_PIN, LOW);
+    digitalWrite(LED_SENSOR_FAULT_PIN, LOW);
+
+    if (status == nullptr)
+    {
+        return;
+    }
+
+    switch (status->state)
+    {
+        case BATTERY_NORMAL:
+            digitalWrite(LED_NORMAL_PIN, HIGH);
+            break;
+
+        case BATTERY_WARNING:
+            digitalWrite(LED_WARNING_PIN, HIGH);
+            break;
+
+        case BATTERY_FAULT:
+            if (status->fault == FAULT_SENSOR)
+            {
+                digitalWrite(LED_SENSOR_FAULT_PIN, HIGH);
+            }
+            else
+            {
+                digitalWrite(LED_CRITICAL_PIN, HIGH);
+            }
+            break;
+
+        default:
+            /* Unknown state: keep all LEDs OFF. */
+            break;
+    }
+}
+
+/* ---------------------------------------------------------
  * UART telemetry output
  * --------------------------------------------------------- */
 
@@ -205,6 +256,18 @@ void setup()
 
     pinMode(SENSOR_FAULT_PIN, INPUT_PULLUP);
 
+    /* Configure status LEDs as outputs. */
+    pinMode(LED_NORMAL_PIN, OUTPUT);
+    pinMode(LED_WARNING_PIN, OUTPUT);
+    pinMode(LED_CRITICAL_PIN, OUTPUT);
+    pinMode(LED_SENSOR_FAULT_PIN, OUTPUT);
+
+    /* Start with all LEDs OFF. */
+    digitalWrite(LED_NORMAL_PIN, LOW);
+    digitalWrite(LED_WARNING_PIN, LOW);
+    digitalWrite(LED_CRITICAL_PIN, LOW);
+    digitalWrite(LED_SENSOR_FAULT_PIN, LOW);
+
     battery_init(&battery_monitor, &battery_config);
 
     Serial.println();
@@ -234,6 +297,9 @@ void loop()
     /* Retrieve the latest protection status. */
     const BatteryStatus status =
         battery_get_status(&battery_monitor);
+
+    /* Update visual indication from the protection FSM. */
+    update_status_leds(&status);
 
     Serial.println("--------------------------------");
 

@@ -31,6 +31,62 @@
       "top": 256.4,
       "left": -96.4,
       "attrs": { "color": "red", "label": "SENSOR FAULT", "bounce": "0" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledNormal",
+      "top": 6,
+      "left": 503,
+      "attrs": { "color": "green", "label": "NORMAL" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledWarning",
+      "top": 73.2,
+      "left": 503,
+      "attrs": { "color": "yellow", "label": "WARNING" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledCritical",
+      "top": 150,
+      "left": 503,
+      "attrs": { "color": "red", "label": "CRITICAL" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledSensorFault",
+      "top": 236.4,
+      "left": 503,
+      "attrs": { "color": "blue", "label": "SENSOR FAULT" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rNormal",
+      "top": 71.15,
+      "left": 422.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rWarning",
+      "top": 138.35,
+      "left": 422.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rCritical",
+      "top": 205.55,
+      "left": 422.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rSensorFault",
+      "top": 311.15,
+      "left": 422.4,
+      "attrs": { "value": "220" }
     }
   ],
   "connections": [
@@ -43,10 +99,22 @@
     [ "esp:3V3", "potTemperature:VCC", "red", [] ],
     [ "esp:GND.1", "potTemperature:GND", "black", [] ],
     [ "potTemperature:SIG", "esp:32", "green", [ "v96", "h258.8", "v0.8" ] ],
-    [ "btnFault:1.l", "esp:25", "green", [ "v-39", "h288.4", "v-104.8" ] ],
-    [ "btnFault:2.r", "esp:GND.1", "black", [] ],
+    [ "btnFault:1.l", "esp:25", "green", [ "v-39", "h278.8", "v-104.8" ] ],
+    [ "btnFault:2.r", "esp:GND.1", "black", [ "h231", "v-114.8" ] ],
+    [ "esp:26", "rNormal:1", "green", [] ],
+    [ "rNormal:2", "ledNormal:A", "green", [ "h85.2", "v-19.2" ] ],
+    [ "esp:27", "rWarning:1", "yellow", [] ],
+    [ "rWarning:2", "ledWarning:A", "yellow", [ "h85.2", "v-28.8" ] ],
+    [ "esp:14", "rCritical:1", "red", [ "h-14.61", "v85.6", "h153.6", "v-28.8" ] ],
+    [ "rCritical:2", "ledCritical:A", "red", [ "h85.2", "v-19.2", "h-38.4" ] ],
+    [ "esp:13", "rSensorFault:1", "blue", [ "h-43.41", "v172" ] ],
+    [ "rSensorFault:2", "ledSensorFault:A", "blue", [ "h85.2", "v-38.4" ] ],
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
-    [ "esp:RX", "$serialMonitor:TX", "", [] ]
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "ledNormal:C", "esp:GND.3", "black", [ "v0", "h-134", "v57.6" ] ],
+    [ "ledWarning:C", "esp:GND.3", "black", [ "v0", "h-134", "v-9.6" ] ],
+    [ "ledCritical:C", "esp:GND.3", "black", [ "v0", "h-134", "v-86.4" ] ],
+    [ "ledSensorFault:C", "esp:GND.3", "black", [ "h-134", "v-172" ] ]
   ],
   "serialMonitor": { "display": "always" },
   "dependencies": {}
